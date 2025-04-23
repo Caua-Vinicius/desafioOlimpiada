@@ -79,3 +79,7 @@ docker exec -it desafio-api pytest
 | Clareza e organização do código | 🟩🟩🟩 |
 | Uso correto do Git | 🟩🟩 |
 | Criatividade (melhorias extras) | 🟩 |
+
+
+## Comentarios
+A maioria dos testes estavam corretos, e os controllers foram organizados e corrigidos de acordo com os testes, porem acredito que o ultimo teste esteja errado pois tenta acessar datas futuras, e isso não acho que funcione na api, por isso o erro retorna falta de campos, mas acho que para correção disso seria necessario uma condição que impede as datas futuras e o erro deveria ser BAD REQUEST

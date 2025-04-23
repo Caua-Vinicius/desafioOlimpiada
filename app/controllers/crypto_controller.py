@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 import httpx
 from datetime import datetime
 
@@ -9,6 +9,13 @@ async def psgft(crypto: str, data: dict):
     quantidade = data["quantidade"]
     data_compra = datetime.fromisoformat(data["dataCompra"])
     data_venda = datetime.fromisoformat(data["dataVenda"])
+
+    if data_compra > data_venda:
+        raise HTTPException(status_code=422, detail="Incorrect data")
+
+    if not isinstance(quantidade, (int, float)):
+        raise HTTPException(status_code=422, detail="Incorrect data")
+
     dias = abs((data_venda - data_compra).days)
 
     async with httpx.AsyncClient() as client:

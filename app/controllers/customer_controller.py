@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from ..database import SessionLocal
@@ -12,8 +14,11 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/", status_code=status.HTTP_200_OK)
+@router.post("/")
 def create_customer(data: dict, db: Session = Depends(get_db)):
+    if not data.get("name", "").strip():
+        raise HTTPException(status_code=400, detail="Name cannot be empty.")
+
     customer = Customer(name=data["name"])
     db.add(customer)
     db.commit()
@@ -24,7 +29,7 @@ def create_customer(data: dict, db: Session = Depends(get_db)):
         db.add(category)
     db.commit()
 
-    return {"customer_id": customer.id}
+    return JSONResponse(content={"customer_id": customer.id}, status_code=status.HTTP_201_CREATED)
 
 @router.put("/{customer_id}")
 def update_customer(customer_id: int, data: dict, db: Session = Depends(get_db)):
